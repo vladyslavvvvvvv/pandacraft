@@ -42,5 +42,11 @@ class Mapmanager():
         while not self.isEmpty((x,y,z)):
             z += 1
         return (x,y,z)
-    def findEmpty(self, pos):
+    
+    def findBlock(self, pos):
         return self.land.findAllMatches("=at="+str(pos))
+    
+    def deleteBlock(self, pos):
+        blocks = self.findBlock(pos)
+        for b in blocks:
+            b.removeNode()

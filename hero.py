@@ -45,20 +45,32 @@ class Hero:
         h = self.hero.getH() % 360
         self.hero.setH(h-5)
 
-    #def turnUp(self):
-        #p = self.hero.getP() + 5
-        #self.hero.setH(p)
+    def turnUp(self):
+        p = self.hero.getP() % 360
+        p -= 5
+        self.hero.setP(p)
 
-    #def turnDown(self):
-        #p = self.hero.getP() - 5
-        #self.hero.setH(p)
+    def turnDown(self):
+        p = self.hero.getP() % 360
+        p += 5
+        self.hero.setP(p)
     
 
     def justMove(self, angle):
         new_pos = self.lookAt(angle)
         self.hero.setPos(new_pos)
     def tryMove(self, angle):
-        pass
+        new_pos = self.lookAt(angle)
+
+        if self.land.isEmpty(new_pos):
+            new_pos = self.land.findHighestblock(new_pos)
+            self.hero.setPos(new_pos)
+
+        else:
+            new_pos = new_pos[0],new_pos[1],new_pos[2]+1
+            if self.land.isEmpty(new_pos):
+                self.hero.setPos(new_pos)
+
     def moveTo(self, angle):
         if self.spectatorMode:
             self.justMove(angle)
@@ -110,10 +122,20 @@ class Hero:
     
     def up(self):
         if self.spectatorMode:
-            z = self.hero.setZ(z+1)
+            z = self.hero.getZ()
+            self.hero.setZ(z+1)
     def down(self):
         if self.spectatorMode:
-            z = self.hero.setZ(z-1)
+            z = self.hero.getZ()
+            self.hero.setZ(z-1)
+
+    def build(self):
+        pos = self.lookAt(self.hero.getH() % 360 )
+        self.land.addBlock(pos)
+    
+    def destroy(self):
+        pos = self.lookAt(self.hero.getH() % 360 )
+        self.land.deleteBlock(pos)
 
     def changeMode(self):
         self.spectatorMode = not self.spectatorMode
@@ -125,6 +147,12 @@ class Hero:
         builtins.base.accept(turn_left_key+"-repeat", self.turnLeft)
         builtins.base.accept(turn_right_key, self.turnRight)
         builtins.base.accept(turn_right_key+"-repeat", self.turnRight)
+        builtins.base.accept(turn_up_key, self.turnUp)
+        builtins.base.accept(turn_up_key+"-repeat", self.turnUp)
+        builtins.base.accept(turn_down_key, self.turnDown)
+        builtins.base.accept(turn_down_key+"-repeat", self.turnDown)
+
+
         builtins.base.accept(move_forward_key, self.forward)
         builtins.base.accept(move_forward_key+"-repeat", self.forward)
 
@@ -145,11 +173,15 @@ class Hero:
         #builtins.base.accept(turn_up_key+"-repeat", self.turnUp)
         builtins.base.accept(change_mode_key, self.changeMode)        
         builtins.base.accept(move_up_key, self.up)  
-        builtins.base.accept(move_down_key, self.down)  
+
+        builtins.base.accept(build_key, self.build)
+        builtins.base.accept(destroy_key, self.destroy)
 
 change_camera_key = "c"
 turn_left_key = "arrow_left"
 turn_right_key = "arrow_right"
+turn_up_key = "arrow_up"
+turn_down_key = "arrow_down"
 move_forward_key = 'w'
 move_backward_key = 's'
 move_left_key = 'a'
@@ -157,5 +189,8 @@ move_right_key = 'd'
 change_mode_key = 'z'
 move_up_key = 'shift'
 move_down_key = 'control'
+build_key = "mouse3"
+destroy_key = "mouse1"
+
 #turn_up_key = "arrow_up"
 #turn_down_key = "arrow_down"
