@@ -137,6 +137,11 @@ class Hero:
         pos = self.lookAt(self.hero.getH() % 360 )
         self.land.deleteBlock(pos)
 
+    def save(self):
+        self.land.saveToBin()
+    def load(self):
+        self.land.loadBin()
+
     def changeMode(self):
         self.spectatorMode = not self.spectatorMode
 
@@ -177,6 +182,10 @@ class Hero:
         builtins.base.accept(build_key, self.build)
         builtins.base.accept(destroy_key, self.destroy)
 
+        builtins.base.accept(save_key, self.save)
+        builtins.base.accept(load_key, self.load)
+
+
 change_camera_key = "c"
 turn_left_key = "arrow_left"
 turn_right_key = "arrow_right"
@@ -191,6 +200,7 @@ move_up_key = 'shift'
 move_down_key = 'control'
 build_key = "mouse3"
 destroy_key = "mouse1"
-
+save_key = "k"
+load_key = "l"
 #turn_up_key = "arrow_up"
 #turn_down_key = "arrow_down"
